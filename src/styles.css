@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+  background: #f0f9f9;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Resaltado de sintaxis Kotlin (tema oscuro sobre tarjeta) */
+.tok-kw { color: #ff9d6e; }
+.tok-fn { color: #7dd3fc; }
+.tok-str { color: #aee9a0; }
+.tok-num { color: #ffc42a; }
+.tok-cm { color: #6f9c99; font-style: italic; }
+.tok-ann { color: #e3b8ff; }
+.tok-type { color: #9ad9d6; }
