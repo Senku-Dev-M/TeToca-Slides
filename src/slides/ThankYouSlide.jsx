@@ -215,7 +215,7 @@ export default function ThankYouSlide() {
           transition={{ delay: 0.9 }}
           className="text-[0.85vw] font-display font-bold text-teal-dark/50 tracking-widest uppercase"
         >
-          Equipo TeToca · 2025
+          Equipo Rocket · 2026
         </motion.p>
       </div>
     </div>
