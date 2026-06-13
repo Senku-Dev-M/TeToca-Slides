@@ -27,6 +27,8 @@ import InstrumentedTestSlide from './slides/InstrumentedTestSlide.jsx'
 import ProcessSlide from './slides/ProcessSlide.jsx'
 import DemoSlide from './slides/DemoSlide.jsx'
 import ConclusionsSlide from './slides/ConclusionsSlide.jsx'
+import NextStepsSlide from './slides/NextStepsSlide.jsx'
+import ThankYouSlide from './slides/ThankYouSlide.jsx'
 
 const SLIDES = [
   { id: 'portada', component: TitleSlide },
@@ -52,6 +54,8 @@ const SLIDES = [
   { id: 'proceso', component: ProcessSlide },
   { id: 'demo', component: DemoSlide },
   { id: 'conclusiones', component: ConclusionsSlide },
+  { id: 'proximos-pasos', component: NextStepsSlide },
+  { id: 'gracias', component: ThankYouSlide },
 ]
 
 const variants = {

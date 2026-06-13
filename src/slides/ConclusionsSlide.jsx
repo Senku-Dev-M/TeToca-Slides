@@ -43,8 +43,8 @@ export default function ConclusionsSlide() {
         title="Resultados del proyecto"
         subtitle="TeToca implementa el ciclo completo de intercambio de servicios sobre una base técnica verificable en el repositorio."
       />
-      <div className="flex-1 flex gap-[2.5vw] min-h-0 z-10 items-center">
-        <div className="flex-[1.7] grid grid-cols-3 gap-[1.2vw]">
+      <div className="flex-1 flex min-h-0 z-10 items-center">
+        <div className="grid grid-cols-3 gap-[1.2vw] w-full">
           {HIGHLIGHTS.map(({ Icon, title, text }, i) => (
             <Card key={title} delay={0.3 + i * 0.1} className="p-[1.1vw]">
               <div className="bg-teal/10 rounded-xl p-[0.55vw] w-fit mb-[0.8vh]">
@@ -55,24 +55,6 @@ export default function ConclusionsSlide() {
             </Card>
           ))}
         </div>
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.9 }}
-          className="flex-[0.5] flex flex-col items-center gap-[2vh]"
-        >
-          <motion.img
-            src="/assets/mascot/waving.png"
-            alt="Mascota del proyecto"
-            className="w-[12vw] drop-shadow-2xl"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl px-[1.8vw] py-[1.6vh] text-center">
-            <p className="text-[1.25vw] font-black font-display text-teal-deepest">Gracias por su atención</p>
-            <p className="text-[0.9vw] text-slate-600 mt-[0.4vh]">Preguntas y comentarios</p>
-          </div>
-        </motion.div>
       </div>
     </div>
   )
