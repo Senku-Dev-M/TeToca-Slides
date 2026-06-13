@@ -1,83 +1,150 @@
+import { motion } from 'framer-motion'
 import { SlideHeader, Card, Evidence } from '../components/SlideShell.jsx'
-import { Smartphone, Network, Image, ShieldCheck } from 'lucide-react'
 
-// Stack declarado en gradle/libs.versions.toml y app/build.gradle.kts.
+/*
+ * Icon sources:
+ *  - Devicon CDN:  https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/{name}/{name}-{variant}.svg
+ *  - Simple Icons: https://cdn.simpleicons.org/{slug}/{color}
+ *
+ * For libraries without a dedicated icon (Coil, Glide, Room, DataStore, CameraX, ktlint, detekt)
+ * we use the closest real brand icon (Kotlin, Android, Jetpack Compose, etc.).
+ */
+
+const DV = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons'
+const SI = 'https://cdn.simpleicons.org'
+
 const GROUPS = [
   {
-    Icon: Smartphone,
     title: 'Lenguaje y UI',
-    accent: 'border-teal text-teal-dark',
+    accent: 'border-teal',
+    accentColor: '#008F8F',
     items: [
-      ['Kotlin', 'Coroutines · Flow'],
-      ['Android SDK 36', 'minSdk 31'],
-      ['XML + Material 1.12', 'vistas clásicas'],
-      ['ConstraintLayout', 'RecyclerView'],
+      { name: 'Kotlin',            sub: 'Coroutines · Flow',      icon: `${DV}/kotlin/kotlin-original.svg` },
+      { name: 'Android SDK 36',    sub: 'minSdk 31',              icon: `${DV}/android/android-original.svg` },
+      { name: 'Material Design',   sub: 'Material 1.12 · vistas', icon: `${DV}/materialui/materialui-original.svg` },
+      { name: 'XML Layouts',       sub: 'ConstraintLayout · RV',  icon: `${DV}/xml/xml-original.svg` },
     ],
   },
   {
-    Icon: Network,
     title: 'Red y datos',
-    accent: 'border-amber-400 text-amber-700',
+    accent: 'border-amber-400',
+    accentColor: '#F59E0B',
     items: [
-      ['Retrofit 3 + Gson', 'REST tipado'],
-      ['OkHttp 4', 'interceptores'],
-      ['Socket.IO 2.1', 'chat en tiempo real'],
-      ['Room 2.8', 'persistencia SQLite'],
-      ['DataStore', 'preferencias'],
-      ['Supabase', 'autenticación JWT'],
+      { name: 'Retrofit 3',    sub: 'REST tipado + Gson',    icon: `${SI}/square/3299CC` },
+      { name: 'OkHttp 4',      sub: 'Interceptores',         icon: `${SI}/square/3E993E` },
+      { name: 'Socket.IO 2.1', sub: 'Chat en tiempo real',   icon: `${DV}/socketio/socketio-original.svg` },
+      { name: 'Room 2.8',      sub: 'Persistencia SQLite',   icon: `${DV}/sqlite/sqlite-original.svg` },
+      { name: 'DataStore',     sub: 'Preferencias clave–valor', icon: `${SI}/jetpackcompose/4285F4` },
+      { name: 'Supabase',      sub: 'Auth JWT · Google OAuth',  icon: `${DV}/supabase/supabase-original.svg` },
     ],
   },
   {
-    Icon: Image,
     title: 'Multimedia',
-    accent: 'border-indigo-400 text-indigo-700',
+    accent: 'border-indigo-400',
+    accentColor: '#818CF8',
     items: [
-      ['CameraX 1.6', 'fotografía de perfil'],
-      ['Coil 2.7', 'carga de imágenes'],
-      ['Glide 4.16', 'carga de imágenes'],
+      { name: 'CameraX 1.6', sub: 'Fotografía de perfil', icon: `${SI}/jetpackcompose/4285F4` },
+      { name: 'Coil 2.7',    sub: 'Carga de imágenes',    icon: `${DV}/kotlin/kotlin-original.svg` },
+      { name: 'Glide 4.16',  sub: 'Carga de imágenes',    icon: `${DV}/java/java-original.svg` },
     ],
   },
   {
-    Icon: ShieldCheck,
     title: 'Calidad y DevOps',
-    accent: 'border-emerald-500 text-emerald-700',
+    accent: 'border-emerald-500',
+    accentColor: '#10B981',
     items: [
-      ['GitLab CI/CD', 'build · test · quality'],
-      ['ktlint + detekt', 'análisis estático'],
-      ['Android Lint', 'abortOnError = true'],
-      ['JUnit + MockK', 'pruebas unitarias'],
-      ['Gradle 9.4', 'version catalogs'],
+      { name: 'GitLab CI/CD',   sub: 'Build · Test · Quality', icon: `${DV}/gitlab/gitlab-original.svg` },
+      { name: 'ktlint + detekt', sub: 'Análisis estático',     icon: `${DV}/kotlin/kotlin-original.svg` },
+      { name: 'Android Lint',    sub: 'abortOnError = true',   icon: `${DV}/android/android-original.svg` },
+      { name: 'JUnit + MockK',  sub: 'Pruebas unitarias',     icon: `${DV}/junit/junit-original.svg` },
+      { name: 'Gradle 9.4',     sub: 'Version catalogs',      icon: `${DV}/gradle/gradle-original.svg` },
     ],
   },
 ]
 
+/* ───────── Small helper component ───────── */
+function TechIcon({ src, name }) {
+  return (
+    <img
+      src={src}
+      alt={name}
+      className="w-[1.5vw] h-[1.5vw] object-contain select-none"
+      draggable={false}
+      loading="lazy"
+      onError={(e) => {
+        // If the icon fails to load, show the first letter as fallback
+        const parent = e.target.parentNode
+        if (parent) {
+          e.target.style.display = 'none'
+          const span = document.createElement('span')
+          span.textContent = name.charAt(0)
+          span.className = 'text-[1vw] font-black text-slate-400'
+          parent.appendChild(span)
+        }
+      }}
+    />
+  )
+}
+
+/* ────────── Slide component ────────── */
 export default function TechStackSlide() {
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center px-[4vw]">
       <SlideHeader
         section="Stack tecnológico"
         title="Tecnologías utilizadas"
-        subtitle="Conjunto de dependencias identificado en el catálogo de versiones de Gradle del repositorio."
+        subtitle="Conjunto de dependencias del catálogo de versiones de Gradle."
       />
+
       <div className="grid grid-cols-4 gap-[1.2vw] w-full z-10">
-        {GROUPS.map(({ Icon, title, accent, items }, gi) => (
-          <Card key={title} delay={0.25 + gi * 0.12} className="p-[1.1vw] flex flex-col">
-            <div className={`flex items-center gap-[0.6vw] pb-[1vh] mb-[1.2vh] border-b ${accent}`}>
-              <Icon className="w-[1.4vw] h-[1.4vw]" />
-              <h4 className="text-[1.05vw] font-black font-display">{title}</h4>
+        {GROUPS.map(({ title, accent, accentColor, items }, gi) => (
+          <Card key={title} delay={0.2 + gi * 0.12} className="p-[1.1vw] flex flex-col">
+            {/* ── Section header ── */}
+            <div className={`flex items-center gap-[0.5vw] pb-[0.8vh] mb-[1vh] border-b-2 ${accent}`}>
+              <div
+                className="w-[0.55vw] h-[0.55vw] rounded-full"
+                style={{ backgroundColor: accentColor }}
+              />
+              <h4 className="text-[1vw] font-black font-display text-teal-deepest">
+                {title}
+              </h4>
             </div>
-            <div className="flex flex-col gap-[0.8vh]">
-              {items.map(([name, detail]) => (
-                <div key={name} className="flex items-baseline justify-between gap-[0.6vw] bg-brand-mint rounded-lg px-[0.8vw] py-[0.6vh]">
-                  <span className="text-[0.88vw] font-bold text-slate-800 whitespace-nowrap">{name}</span>
-                  <span className="text-[0.72vw] text-slate-500 text-right leading-tight">{detail}</span>
-                </div>
+
+            {/* ── Tech list with icons ── */}
+            <div className="flex flex-col gap-[0.65vh]">
+              {items.map(({ name, sub, icon }, ti) => (
+                <motion.div
+                  key={name}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.35 + gi * 0.12 + ti * 0.06, duration: 0.35 }}
+                  whileHover={{ x: 3 }}
+                  className="flex items-center gap-[0.55vw] rounded-xl px-[0.6vw] py-[0.45vh] bg-brand-mint/60 hover:bg-brand-mint transition-colors duration-200"
+                >
+                  {/* Icon */}
+                  <div className="w-[2vw] h-[2vw] rounded-lg bg-white shadow-sm flex items-center justify-center shrink-0 p-[0.2vw]">
+                    <TechIcon src={icon} name={name} />
+                  </div>
+
+                  {/* Text */}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[0.82vw] font-bold text-slate-800 leading-tight truncate">
+                      {name}
+                    </p>
+                    <p className="text-[0.62vw] text-slate-500 leading-tight truncate">
+                      {sub}
+                    </p>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </Card>
         ))}
       </div>
-      <Evidence delay={1} className="mt-[2vh] z-10">gradle/libs.versions.toml · app/build.gradle.kts</Evidence>
+
+      <Evidence delay={1} className="mt-[1.8vh] z-10">
+        gradle/libs.versions.toml · app/build.gradle.kts
+      </Evidence>
     </div>
   )
 }
