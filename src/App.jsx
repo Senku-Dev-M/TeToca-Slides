@@ -28,6 +28,7 @@ import ProcessSlide from './slides/ProcessSlide.jsx'
 import DemoSlide from './slides/DemoSlide.jsx'
 import ConclusionsSlide from './slides/ConclusionsSlide.jsx'
 import NextStepsSlide from './slides/NextStepsSlide.jsx'
+import AccessSlide from './slides/AccessSlide.jsx'
 import ThankYouSlide from './slides/ThankYouSlide.jsx'
 
 const SLIDES = [
@@ -55,6 +56,7 @@ const SLIDES = [
   { id: 'demo', component: DemoSlide },
   { id: 'conclusiones', component: ConclusionsSlide },
   { id: 'proximos-pasos', component: NextStepsSlide },
+  { id: 'acceso', component: AccessSlide },
   { id: 'gracias', component: ThankYouSlide },
 ]
 

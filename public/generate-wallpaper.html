@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TeToca – Diseñador de Fondos de Pantalla y Reuniones</title>
+  <!-- Google Fonts: Sora para títulos, Inter para el resto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #008F8F;
+      --primary-bright: #17B5B6;
+      --primary-soft: #9AD9D6;
+      --accent: #FFC42A;
+      --bg-dark: #0a0e10;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f0f4f4;
+      --text-muted: #8fa0a0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      background-image: radial-gradient(circle at 0% 0%, rgba(0, 143, 143, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 100% 100%, rgba(255, 196, 42, 0.08) 0%, transparent 50%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: rgba(10, 14, 16, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+
+    .brand h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 30%, var(--primary-soft) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .brand span {
+      background: rgba(0, 143, 143, 0.15);
+      color: var(--primary-bright);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 143, 143, 0.3);
+    }
+
+    .app-container {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 69px);
+      min-height: 500px;
+    }
+
+    /* Control Panel */
+    .control-panel {
+      width: 440px;
+      background: rgba(10, 15, 18, 0.7);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--card-border);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      overflow-y: auto;
+      z-index: 5;
+    }
+
+    .control-panel::-webkit-scrollbar {
+      width: 6px;
+    }
+    .control-panel::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .control-panel::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    .control-panel::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--primary-soft);
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control-group {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 0;
+    }
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    select, input[type="text"], input[type="number"], input[type="file"] {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    select:focus, input[type="text"]:focus, input[type="number"]:focus, input[type="file"]:focus {
+      outline: none;
+      border-color: var(--primary-bright);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 2px rgba(23, 181, 182, 0.2);
+    }
+
+    /* File input overrides */
+    input[type="file"] {
+      padding: 6px 10px;
+      font-size: 0.78rem;
+    }
+
+    /* Custom range sliders */
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary-bright);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    .slider-val {
+      font-size: 0.8rem;
+      font-family: monospace;
+      color: var(--primary-soft);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    /* Button Styling */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, #007070 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 143, 143, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-bright) 0%, var(--primary) 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(23, 181, 182, 0.3);
+    }
+
+    /* Workspace */
+    .workspace {
+      flex: 1;
+      background: #0f1418;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      position: relative;
+    }
+
+    .canvas-container {
+      background: #000;
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      max-width: 100%;
+      max-height: calc(100vh - 160px);
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .canvas-hint {
+      margin-top: 16px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Checkbox toggle switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider-toggle {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: .3s;
+      border-radius: 20px;
+    }
+
+    .slider-toggle:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider-toggle {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider-toggle:before {
+      transform: translateX(16px);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 12px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 8px 12px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      color: var(--primary-soft);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .tab-content.active {
+      display: flex;
+    }
+
+    /* File loader specific container */
+    .custom-loader-container {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .custom-loader-container.show {
+      display: block;
+    }
+
+    /* Image preview in selector list */
+    .image-preview-thumbnail {
+      width: 100%;
+      height: 80px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+    }
+
+    .image-preview-thumbnail img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <img src="/assets/tetoca_logo.png" alt="TeToca Logo" onerror="this.src='https://placehold.co/100x100?text=TT'">
+      <div>
+        <h1>TeToca</h1>
+      </div>
+      <span>Background Generator v2</span>
+    </div>
+    <div style="font-size: 0.85rem; color: var(--text-muted);">
+      Diseñador de fondos de demostración y reuniones
+    </div>
+  </header>
+
+  <div class="app-container">
+    
+    <!-- Panel de control lateral izquierdo -->
+    <div class="control-panel">
+      
+      <!-- Modo de Fondo y Resolución -->
+      <div>
+        <div class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Modo y Base
+        </div>
+        <div class="control-group">
+          <div class="form-item">
+            <label for="wallpaper-mode">Propósito del Fondo</label>
+            <select id="wallpaper-mode">
+              <option value="demo" selected>🖥️ Demo de App (Celulares al centro)</option>
+              <option value="meeting">🎥 Reunión Virtual (Cámara web al centro)</option>
+            </select>
+          </div>
+          <div class="form-item">
+            <label for="preset-resolution">Resolución de Imagen</label>
+            <select id="preset-resolution">
+              <option value="1920x1080" selected>1920 × 1080 (1080p Full HD)</option>
+              <option value="2560x1440">2560 × 1440 (2K QHD)</option>
+              <option value="3840x2160">3840 × 2160 (4K UHD)</option>
+            </select>
+          </div>
+          <div class="form-item">
+            <label for="bg-style">Estilo de Fondo</label>
+            <select id="bg-style">
+              <option value="classic" selected>TeToca Clásico (Mint + Degradado Suave)</option>
+              <option value="colorful">Círculos Orgánicos / Marca TeToca</option>
+              <option value="pattern">Patrón de Iconos Muy Tenue</option>
+              <option value="dark-premium">Dark Premium (Elegante Oscuro)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configuración de Imágenes Laterales -->
+      <div>
+        <div class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          Personalización de Imágenes
+        </div>
+        <div class="control-group">
+          
+          <div class="tabs">
+            <div class="tab active" id="tab-btn-left" onclick="switchTab('left')">Lado Izquierdo</div>
+            <div class="tab" id="tab-btn-right" onclick="switchTab('right')">Lado Derecho</div>
+          </div>
+
+          <!-- Pestaña Izquierda -->
+          <div id="tab-left" class="tab-content active">
+            <div class="form-item">
+              <label for="image-source-left">Origen de la Imagen</label>
+              <select id="image-source-left">
+                <!-- Poses de Tuki -->
+                <optgroup label="Poses de Tuki">
+                  <option value="slide_left" selected>Tuki: Asomándose Izquierda</option>
+                  <option value="pointing">Tuki: Apuntando</option>
+                  <option value="waving">Tuki: Saludando</option>
+                  <option value="open_arms">Tuki: Brazos Abiertos</option>
+                  <option value="thumbs_up">Tuki: Pulgar Arriba</option>
+                  <option value="attention">Tuki: Atención</option>
+                  <option value="headphones">Tuki: Con Auriculares</option>
+                  <option value="briefcase">Tuki: Con Maletín</option>
+                  <option value="paper_plane">Tuki: Avión de Papel</option>
+                  <option value="shrug">Tuki: Duda / Shrug</option>
+                  <option value="star">Tuki: Con Estrella</option>
+                </optgroup>
+                <!-- Galería del paquete -->
+                <optgroup id="package-optgroup-left" label="Paquete de Imágenes TeToca">
+                  <!-- Se llenará dinámicamente con JS -->
+                </optgroup>
+                <!-- Personalizado -->
+                <optgroup label="Cargar Archivo">
+                  <option value="custom">Subir imagen personalizada...</option>
+                </optgroup>
+                <option value="none">Ninguno / Ocultar</option>
+              </select>
+            </div>
+
+            <!-- Loader para imagen local izquierda -->
+            <div class="custom-loader-container" id="custom-loader-left">
+              <label for="file-left">Selecciona Imagen de tu PC</label>
+              <input type="file" id="file-left" accept="image/*">
+            </div>
+
+            <!-- Previsualización miniatura -->
+            <div class="image-preview-thumbnail" id="thumbnail-left">
+              <img src="/assets/mascot/slide_left.png" alt="Preview Izq">
+            </div>
+            
+            <div class="form-item">
+              <div class="form-item-row">
+                <label for="scale-left">Tamaño de Imagen</label>
+                <span id="val-scale-left" class="slider-val">70%</span>
+              </div>
+              <div class="slider-container">
+                <input type="range" id="scale-left" min="10" max="250" value="70">
+              </div>
+            </div>
+
+            <div class="form-item">
+              <div class="form-item-row">
+                <label for="x-left">Posición Horizontal (Offset)</label>
+                <span id="val-x-left" class="slider-val">20px</span>
+              </div>
+              <div class="slider-container">
+                <input type="range" id="x-left" min="-300" max="800" value="20">
+              </div>
+            </div>
+
+            <div class="form-item">
+              <div class="form-item-row">
+                <label for="y-left">Posición Vertical (Offset)</label>
+                <span id="val-y-left" class="slider-val">50%</span>
+              </div>
+              <div class="slider-container">
+                <input type="range" id="y-left" min="0" max="100" value="50">
+              </div>
+            </div>
+
+            <label class="form-item-row checkbox-label" for="mirror-left">
+              <span style="font-size:0.82rem; font-weight:500;">Espejar Imagen Horizontalmente</span>
+              <span class="switch">
+                <input type="checkbox" id="mirror-left">
+                <span class="slider-toggle"></span>
+              </span>
+            </label>
+          </div>
+
+          <!-- Pestaña Derecha -->
+          <div id="tab-right" class="tab-content">
+            <div class="form-item">
+              <label for="image-source-right">Origen de la Imagen</label>
+              <select id="image-source-right">
+                <!-- Poses de Tuki -->
+                <optgroup label="Poses de Tuki">
+                  <option value="slide_right" selected>Tuki: Asomándose Derecha</option>
+                  <option value="pointing">Tuki: Apuntando</option>
+                  <option value="waving">Tuki: Saludando</option>
+                  <option value="open_arms">Tuki: Brazos Abiertos</option>
+                  <option value="thumbs_up">Tuki: Pulgar Arriba</option>
+                  <option value="attention">Tuki: Atención</option>
+                  <option value="headphones">Tuki: Con Auriculares</option>
+                  <option value="briefcase">Tuki: Con Maletín</option>
+                  <option value="paper_plane">Tuki: Avión de Papel</option>
+                  <option value="shrug">Tuki: Duda / Shrug</option>
+                  <option value="star">Tuki: Con Estrella</option>
+                </optgroup>
+                <!-- Galería del paquete -->
+                <optgroup id="package-optgroup-right" label="Paquete de Imágenes TeToca">
+                  <!-- Se llenará dinámicamente con JS -->
+                </optgroup>
+                <!-- Personalizado -->
+                <optgroup label="Cargar Archivo">
+                  <option value="custom">Subir imagen personalizada...</option>
+                </optgroup>
+                <option value="none">Ninguno / Ocultar</option>
+              </select>
+            </div>
+
+            <!-- Loader para imagen local derecha -->
+            <div class="custom-loader-container" id="custom-loader-right">
+              <label for="file-right">Selecciona Imagen de tu PC</label>
+              <input type="file" id="file-right" accept="image/*">
+            </div>
+
+            <!-- Previsualización miniatura -->
+            <div class="image-preview-thumbnail" id="thumbnail-right">
+              <img src="/assets/mascot/slide_right.png" alt="Preview Der">
+            </div>
+            
+            <div class="form-item">
+              <div class="form-item-row">
+                <label for="scale-right">Tamaño de Imagen</label>
+                <span id="val-scale-right" class="slider-val">70%</span>
+              </div>
+              <div class="slider-container">
+                <input type="range" id="scale-right" min="10" max="250" value="70">
+              </div>
+            </div>
+
+            <div class="form-item">
+              <div class="form-item-row">
+                <label for="x-right">Posición Horizontal (Offset)</label>
+                <span id="val-x-right" class="slider-val">20px</span>
+              </div>
+              <div class="slider-container">
+                <input type="range" id="x-right" min="-300" max="800" value="20">
+              </div>
+            </div>
+
+            <div class="form-item">
+              <div class="form-item-row">
+                <label for="y-right">Posición Vertical (Offset)</label>
+                <span id="val-y-right" class="slider-val">50%</span>
+              </div>
+              <div class="slider-container">
+                <input type="range" id="y-right" min="0" max="100" value="50">
+              </div>
+            </div>
+
+            <label class="form-item-row checkbox-label" for="mirror-right">
+              <span style="font-size:0.82rem; font-weight:500;">Espejar Imagen Horizontalmente</span>
+              <span class="switch">
+                <input type="checkbox" id="mirror-right">
+                <span class="slider-toggle"></span>
+              </span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Guías Visuales y Elementos de Marca -->
+      <div>
+        <div class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Estructura y Visibilidad
+        </div>
+        <div class="control-group">
+          
+          <label class="form-item-row checkbox-label" for="show-guides">
+            <div style="display:flex; flex-direction:column; gap:2px">
+              <span style="font-size:0.85rem; font-weight:500;">Mostrar Guías Centrales</span>
+              <span style="font-size:0.75rem; color:var(--text-muted)">Simulador o silueta de cámara</span>
+            </div>
+            <span class="switch">
+              <input type="checkbox" id="show-guides" checked>
+              <span class="slider-toggle"></span>
+            </span>
+          </label>
+          
+          <label class="form-item-row checkbox-label" for="show-logo">
+            <div style="display:flex; flex-direction:column; gap:2px">
+              <span style="font-size:0.85rem; font-weight:500;">Mostrar Logo TeToca</span>
+              <span style="font-size:0.75rem; color:var(--text-muted)">Logotipo y nombre del proyecto</span>
+            </div>
+            <span class="switch">
+              <input type="checkbox" id="show-logo" checked>
+              <span class="slider-toggle"></span>
+            </span>
+          </label>
+
+          <label class="form-item-row checkbox-label" for="show-wave">
+            <div style="display:flex; flex-direction:column; gap:2px">
+              <span style="font-size:0.85rem; font-weight:500;">Formas Orgánicas</span>
+              <span style="font-size:0.75rem; color:var(--text-muted)">Curvas estéticas de color de fondo</span>
+            </div>
+            <span class="switch">
+              <input type="checkbox" id="show-wave" checked>
+              <span class="slider-toggle"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Botón de Descarga -->
+      <button class="btn btn-primary" id="btn-download" style="margin-top:auto;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar Fondo (PNG)
+      </button>
+
+    </div>
+
+    <!-- Workspace de previsualización -->
+    <div class="workspace">
+      <div class="canvas-container">
+        <canvas id="wallpaperCanvas" width="1920" height="1080"></canvas>
+      </div>
+      <div class="canvas-hint">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Las guías (celulares, silueta de persona) y bordes de ayuda NO se incluirán en el PNG descargado.
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Referencias
+    const canvas = document.getElementById('wallpaperCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Paleta de colores TeToca
+    const PALETTE = {
+      teal: '#008F8F',
+      tealSoft: '#9AD9D6',
+      tealBright: '#17B5B6',
+      yellow: '#FFC42A',
+      backgroundLight: '#F0F9F9',
+      textBlack: '#050505',
+      white: '#FFFFFF'
+    };
+
+    // Colecciones de imágenes
+    const MASCOT_PATH = '/assets/mascot/';
+    const PACKAGE_PATH = '/assets/package-images/';
+    const mascotImages = {};
+    const packageImages = {};
+    const customImages = { left: null, right: null };
+
+    // Lista de poses de Tuki
+    const mascotPoses = [
+      'slide_left', 'slide_right', 'pointing', 'waving', 
+      'open_arms', 'thumbs_up', 'attention', 'headphones', 
+      'briefcase', 'paper_plane', 'shrug', 'star'
+    ];
+
+    // Lista de imágenes disponibles en la carpeta package-images (1.png a 25.png, exceptuando la 3)
+    const packageImageFiles = [];
+    for (let i = 1; i <= 25; i++) {
+      if (i !== 3) packageImageFiles.push(`${i}.png`);
+    }
+    packageImageFiles.push('tetoca_mascot_penguin.png');
+    packageImageFiles.push('tetoca-logo.png');
+
+    // Inicializar selectores con las imágenes del paquete
+    const optgroupLeft = document.getElementById('package-optgroup-left');
+    const optgroupRight = document.getElementById('package-optgroup-right');
+
+    packageImageFiles.forEach(file => {
+      const name = file.replace('.png', '').replace('_', ' ').replace('-', ' ');
+      
+      const optLeft = document.createElement('option');
+      optLeft.value = `pkg_${file}`;
+      optLeft.textContent = `Paquete: ${name}`;
+      optgroupLeft.appendChild(optLeft);
+
+      const optRight = document.createElement('option');
+      optRight.value = `pkg_${file}`;
+      optRight.textContent = `Paquete: ${name}`;
+      optgroupRight.appendChild(optRight);
+    });
+
+    // Cargar Logotipo base
+    const logoImg = new Image();
+    logoImg.src = '/assets/tetoca_logo.png';
+    let logoLoaded = false;
+    logoImg.onload = () => { logoLoaded = true; requestRedraw(); };
+
+    // Cargar Poses por defecto de Tuki
+    mascotPoses.forEach(pose => {
+      const img = new Image();
+      img.src = `${MASCOT_PATH}${pose}.png`;
+      img.onload = () => { mascotImages[pose] = img; requestRedraw(); };
+    });
+
+    // Cargar Imágenes del Paquete de forma diferida (cuando se seleccionan o al iniciar)
+    function getOrLoadPackageImage(filename, callback) {
+      if (packageImages[filename]) {
+        callback(packageImages[filename]);
+        return;
+      }
+      const img = new Image();
+      img.src = `${PACKAGE_PATH}${filename}`;
+      img.onload = () => {
+        packageImages[filename] = img;
+        callback(img);
+      };
+      img.onerror = () => {
+        console.error("No se pudo cargar la imagen del paquete: " + filename);
+      };
+    }
+
+    // Manejo del redibujado interactivo
+    let redrawTimeout;
+    function requestRedraw() {
+      clearTimeout(redrawTimeout);
+      redrawTimeout = setTimeout(drawWallpaper, 10);
+    }
+
+    // Cambiar entre pestañas Izquierda / Derecha
+    function switchTab(side) {
+      document.getElementById('tab-btn-left').classList.remove('active');
+      document.getElementById('tab-btn-right').classList.remove('active');
+      document.getElementById('tab-left').classList.remove('active');
+      document.getElementById('tab-right').classList.remove('active');
+      
+      if (side === 'left') {
+        document.getElementById('tab-btn-left').classList.add('active');
+        document.getElementById('tab-left').classList.add('active');
+      } else {
+        document.getElementById('tab-btn-right').classList.add('active');
+        document.getElementById('tab-right').classList.add('active');
+      }
+    }
+
+    // Cambios en los controles nativos
+    const allInputIds = [
+      'preset-resolution', 'bg-style', 'wallpaper-mode',
+      'image-source-left', 'scale-left', 'x-left', 'y-left', 'mirror-left',
+      'image-source-right', 'scale-right', 'x-right', 'y-right', 'mirror-right',
+      'show-guides', 'show-logo', 'show-wave'
+    ];
+
+    allInputIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', (e) => {
+          // Mostrar valor en los sliders
+          const valDisplay = document.getElementById(`val-${id}`);
+          if (valDisplay) {
+            if (id.includes('scale')) {
+              valDisplay.textContent = e.target.value + '%';
+            } else if (id.includes('x')) {
+              valDisplay.textContent = e.target.value + 'px';
+            } else if (id.includes('y')) {
+              valDisplay.textContent = e.target.value + '%';
+            }
+          }
+
+          // Ajustar resolución del Canvas
+          if (id === 'preset-resolution') {
+            const [w, h] = e.target.value.split('x').map(Number);
+            canvas.width = w;
+            canvas.height = h;
+          }
+
+          // Mostrar/ocultar el selector de archivos locales si se selecciona "custom"
+          if (id === 'image-source-left') {
+            const isCustom = e.target.value === 'custom';
+            document.getElementById('custom-loader-left').classList.toggle('show', isCustom);
+            updateThumbnail('left');
+          }
+          if (id === 'image-source-right') {
+            const isCustom = e.target.value === 'custom';
+            document.getElementById('custom-loader-right').classList.toggle('show', isCustom);
+            updateThumbnail('right');
+          }
+
+          requestRedraw();
+        });
+
+        // Asegurar redibujado en cambio de selectores o switches
+        el.addEventListener('change', () => {
+          if (id.startsWith('image-source-')) {
+            const side = id.endsWith('left') ? 'left' : 'right';
+            const val = el.value;
+            if (val.startsWith('pkg_')) {
+              const filename = val.replace('pkg_', '');
+              getOrLoadPackageImage(filename, () => {
+                updateThumbnail(side);
+                requestRedraw();
+              });
+            } else {
+              updateThumbnail(side);
+            }
+          }
+          requestRedraw();
+        });
+      }
+    });
+
+    // Actualizar previsualización en miniatura (thumbnail) de la barra lateral
+    function updateThumbnail(side) {
+      const source = document.getElementById(`image-source-${side}`).value;
+      const thumbImg = document.querySelector(`#thumbnail-${side} img`);
+      
+      if (source === 'none') {
+        thumbImg.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="grey" stroke-width="1"><rect width="22" height="22" x="1" y="1" rx="2"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+      } else if (source === 'custom') {
+        if (customImages[side]) {
+          thumbImg.src = customImages[side].src;
+        } else {
+          thumbImg.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="grey" stroke-width="1" stroke-linecap="round"><rect width="20" height="20" x="2" y="2" rx="2"/><path d="M21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/><circle cx="9" cy="9" r="2"/></svg>';
+        }
+      } else if (source.startsWith('pkg_')) {
+        const filename = source.replace('pkg_', '');
+        thumbImg.src = `${PACKAGE_PATH}${filename}`;
+      } else {
+        thumbImg.src = `${MASCOT_PATH}${source}.png`;
+      }
+    }
+
+    // Manejar subida de archivos personalizados
+    document.getElementById('file-left').addEventListener('change', (e) => {
+      handleFileSelect(e, 'left');
+    });
+    document.getElementById('file-right').addEventListener('change', (e) => {
+      handleFileSelect(e, 'right');
+    });
+
+    function handleFileSelect(e, side) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          customImages[side] = img;
+          updateThumbnail(side);
+          requestRedraw();
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Dibujado del Wallpaper en el Canvas
+    function drawWallpaper(isExporting = false) {
+      const W = canvas.width;
+      const H = canvas.height;
+      
+      ctx.clearRect(0, 0, W, H);
+
+      const style = document.getElementById('bg-style').value;
+      const mode = document.getElementById('wallpaper-mode').value;
+      
+      // 1. FONDO BASE
+      if (style === 'dark-premium') {
+        ctx.fillStyle = '#060E10';
+        ctx.fillRect(0, 0, W, H);
+
+        const grad = ctx.createRadialGradient(W/2, H/2, 50, W/2, H/2, W);
+        grad.addColorStop(0, '#0a1719');
+        grad.addColorStop(1, '#04080a');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+      } else {
+        ctx.fillStyle = PALETTE.backgroundLight;
+        ctx.fillRect(0, 0, W, H);
+
+        const grad = ctx.createLinearGradient(0, 0, W, H);
+        grad.addColorStop(0, PALETTE.backgroundLight);
+        grad.addColorStop(1, '#D6F2F2');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      // 2. FORMAS ORGÁNICAS ABSTRACTAS
+      const showWave = document.getElementById('show-wave').checked;
+      if (showWave) {
+        if (style === 'dark-premium') {
+          ctx.fillStyle = 'rgba(0, 143, 143, 0.08)';
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.bezierCurveTo(W*0.2, H*0.2, W*0.15, H*0.8, 0, H);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillStyle = 'rgba(23, 181, 182, 0.05)';
+          ctx.beginPath();
+          ctx.moveTo(0, H*0.1);
+          ctx.bezierCurveTo(W*0.25, H*0.3, W*0.12, H*0.9, 0, H*0.8);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillStyle = 'rgba(255, 196, 42, 0.04)';
+          ctx.beginPath();
+          ctx.moveTo(W, 0);
+          ctx.bezierCurveTo(W*0.8, H*0.15, W*0.85, H*0.75, W, H);
+          ctx.closePath();
+          ctx.fill();
+        } else {
+          ctx.fillStyle = 'rgba(0, 143, 143, 0.07)';
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.bezierCurveTo(W*0.22, H*0.25, W*0.18, H*0.75, 0, H);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillStyle = 'rgba(154, 217, 214, 0.4)';
+          ctx.beginPath();
+          ctx.moveTo(0, H*0.15);
+          ctx.bezierCurveTo(W*0.15, H*0.35, W*0.12, H*0.85, 0, H*0.75);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillStyle = 'rgba(255, 196, 42, 0.09)';
+          ctx.beginPath();
+          ctx.moveTo(W, 0);
+          ctx.bezierCurveTo(W*0.78, H*0.2, W*0.82, H*0.8, W, H);
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+
+      // 3. CÍRCULOS DE MARCA
+      if (style === 'colorful') {
+        const circles = [
+          { x: W * 0.08, y: H * 0.25, r: W * 0.12, color: 'rgba(0, 143, 143, 0.06)' },
+          { x: W * 0.05, y: H * 0.75, r: W * 0.09, color: 'rgba(255, 196, 42, 0.08)' },
+          { x: W * 0.92, y: H * 0.3, r: W * 0.1, color: 'rgba(255, 196, 42, 0.07)' },
+          { x: W * 0.95, y: H * 0.8, r: W * 0.13, color: 'rgba(23, 181, 182, 0.06)' }
+        ];
+        circles.forEach(c => {
+          ctx.fillStyle = c.color;
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      // 4. ICONOS TENUES
+      if (style === 'pattern') {
+        ctx.strokeStyle = style === 'dark-premium' ? 'rgba(255,255,255,0.03)' : 'rgba(0, 143, 143, 0.05)';
+        ctx.fillStyle = style === 'dark-premium' ? 'rgba(255,255,255,0.03)' : 'rgba(0, 143, 143, 0.05)';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        const points = [
+          { x: W * 0.05, y: H * 0.15, size: 45 },
+          { x: W * 0.12, y: H * 0.35, size: 55 },
+          { x: W * 0.04, y: H * 0.6, size: 50 },
+          { x: W * 0.09, y: H * 0.82, size: 40 },
+          { x: W * 0.95, y: H * 0.18, size: 48 },
+          { x: W * 0.88, y: H * 0.42, size: 52 },
+          { x: W * 0.96, y: H * 0.65, size: 42 },
+          { x: W * 0.91, y: H * 0.85, size: 50 }
+        ];
+
+        points.forEach((pt, idx) => {
+          ctx.save();
+          ctx.translate(pt.x, pt.y);
+          ctx.rotate((idx * 30 * Math.PI) / 180);
+          const s = pt.size;
+          ctx.beginPath();
+          if (idx % 3 === 0) {
+            for (let i = 0; i < 5; i++) {
+              const a = (i * 72 - 90) * Math.PI / 180;
+              ctx.lineTo(s*0.4*Math.cos(a), s*0.4*Math.sin(a));
+              const a2 = ((i * 72) + 36 - 90) * Math.PI / 180;
+              ctx.lineTo(s*0.18*Math.cos(a2), s*0.18*Math.sin(a2));
+            }
+            ctx.closePath();
+            ctx.stroke();
+          } else if (idx % 3 === 1) {
+            ctx.moveTo(0, s*0.3);
+            ctx.bezierCurveTo(-s*0.4, -s*0.1, -s*0.4, -s*0.4, 0, -s*0.2);
+            ctx.bezierCurveTo(s*0.4, -s*0.4, s*0.4, -s*0.1, 0, s*0.3);
+            ctx.stroke();
+          } else {
+            ctx.arc(0, 0, s*0.25, 0, Math.PI*2);
+            ctx.stroke();
+          }
+          ctx.restore();
+        });
+      }
+
+      // 5. DIBUJAR IMAGEN IZQUIERDA
+      drawImageOnSide('left', W, H);
+
+      // 6. DIBUJAR IMAGEN DERECHA
+      drawImageOnSide('right', W, H);
+
+      // 7. LOGOTIPO Y NOMBRE DE TETOCA (si está activo)
+      const showLogo = document.getElementById('show-logo').checked;
+      if (showLogo && logoLoaded) {
+        const logoSize = W * 0.035;
+        // Para modo Reunión, colocamos el logo arriba para que se vea más profesional en la cámara
+        const x = W * 0.03;
+        const y = mode === 'meeting' ? H * 0.04 : H - logoSize - H * 0.03;
+
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+        ctx.shadowBlur = 10;
+        ctx.drawImage(logoImg, x, y, logoSize, logoSize);
+        
+        ctx.fillStyle = style === 'dark-premium' ? '#FFFFFF' : PALETTE.textBlack;
+        ctx.font = `bold ${W * 0.014}px Sora`;
+        ctx.textBaseline = 'middle';
+        ctx.fillText("TeToca", x + logoSize + 10, y + logoSize / 2);
+
+        // Añadir slogan en modo reunión
+        if (mode === 'meeting') {
+          ctx.fillStyle = style === 'dark-premium' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)';
+          ctx.font = `${W * 0.009}px 'Inter'`;
+          ctx.fillText("Todo a tu alcance", x + logoSize + 10, y + logoSize / 2 + 18);
+        }
+        ctx.restore();
+      }
+
+      // 8. DIBUJAR GUÍAS VISUALES (Sólo si NO se está exportando)
+      const showGuides = document.getElementById('show-guides').checked;
+      if (showGuides && !isExporting) {
+        if (mode === 'demo') {
+          drawPhoneGuides(W, H, style);
+        } else {
+          drawCameraGuide(W, H, style);
+        }
+      }
+    }
+
+    // Lógica para dibujar la imagen en el lado correspondiente
+    function drawImageOnSide(side, W, H) {
+      const source = document.getElementById(`image-source-${side}`).value;
+      if (source === 'none') return;
+
+      let img = null;
+      if (source === 'custom') {
+        img = customImages[side];
+      } else if (source.startsWith('pkg_')) {
+        const filename = source.replace('pkg_', '');
+        img = packageImages[filename];
+      } else {
+        img = mascotImages[source];
+      }
+
+      if (!img || !img.complete) return;
+
+      const scale = parseFloat(document.getElementById(`scale-${side}`).value) / 100;
+      const xOffset = parseInt(document.getElementById(`x-${side}`).value);
+      const yPercent = parseInt(document.getElementById(`y-${side}`).value) / 100;
+      const mirror = document.getElementById(`mirror-${side}`).checked;
+
+      // Calcular ancho base proporcional a la resolución
+      const baseWidth = W * 0.22;
+      const width = baseWidth * scale;
+      const height = width * (img.height / img.width);
+
+      // Posición horizontal
+      let x = 0;
+      if (side === 'left') {
+        x = xOffset;
+      } else {
+        x = W - width - xOffset;
+      }
+
+      // Posición vertical
+      const y = H * yPercent - height / 2;
+
+      ctx.save();
+      // Aplicar espejo si es necesario
+      if (mirror) {
+        ctx.translate(x + width, y);
+        ctx.scale(-1, 1);
+        ctx.drawImage(img, 0, 0, width, height);
+      } else {
+        ctx.drawImage(img, x, y, width, height);
+      }
+      ctx.restore();
+    }
+
+    // Guías de celulares para demostraciones
+    function drawPhoneGuides(W, H, style) {
+      ctx.save();
+      const outlineColor = style === 'dark-premium' ? 'rgba(23, 181, 182, 0.4)' : 'rgba(0, 143, 143, 0.3)';
+      const fillColor = style === 'dark-premium' ? 'rgba(255, 255, 255, 0.015)' : 'rgba(0, 0, 0, 0.01)';
+      const labelColor = style === 'dark-premium' ? '#8fa0a0' : '#6f8080';
+
+      ctx.strokeStyle = outlineColor;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 8]);
+      
+      const centerAreaW = W * 0.45;
+      const centerAreaH = H * 0.85;
+      const centerAreaX = (W - centerAreaW) / 2;
+      const centerAreaY = (H - centerAreaH) / 2;
+
+      ctx.fillStyle = fillColor;
+      ctx.fillRect(centerAreaX, centerAreaY, centerAreaW, centerAreaH);
+      ctx.strokeRect(centerAreaX, centerAreaY, centerAreaW, centerAreaH);
+
+      const phoneW = W * 0.16;
+      const phoneH = phoneW * 2.1;
+      const phoneY = (H - phoneH) / 2;
+
+      drawDeviceOutline(W/2 - phoneW - 20, phoneY, phoneW, phoneH, 18, outlineColor, fillColor);
+      drawDeviceOutline(W/2 + 20, phoneY, phoneW, phoneH, 18, outlineColor, fillColor);
+
+      ctx.fillStyle = labelColor;
+      ctx.font = `${W * 0.009}px 'Inter'`;
+      ctx.textAlign = 'center';
+      ctx.fillText("ÁREA CENTRAL LIBRE PARA EMULADORES", W/2, centerAreaY + 30);
+      ctx.restore();
+    }
+
+    // Guía de cámara para reuniones virtuales (Busto de persona en el centro)
+    function drawCameraGuide(W, H, style) {
+      ctx.save();
+      const outlineColor = style === 'dark-premium' ? 'rgba(255, 196, 42, 0.35)' : 'rgba(0, 143, 143, 0.25)';
+      const fillColor = style === 'dark-premium' ? 'rgba(255, 255, 255, 0.01)' : 'rgba(0, 0, 0, 0.015)';
+      const labelColor = style === 'dark-premium' ? '#8fa0a0' : '#6f8080';
+
+      ctx.strokeStyle = outlineColor;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 6]);
+
+      // Silueta humana simplificada en el centro inferior
+      const centerX = W / 2;
+      const headR = H * 0.11;
+      const headY = H * 0.45;
+      const shoulderW = W * 0.32;
+      const shoulderH = H * 0.4;
+      const shoulderY = H * 0.65;
+
+      ctx.fillStyle = fillColor;
+      
+      // Dibujar hombros / busto
+      ctx.beginPath();
+      ctx.moveTo(centerX - shoulderW/2, H);
+      ctx.quadraticCurveTo(centerX - shoulderW/2 + 30, shoulderY, centerX - headR*1.1, shoulderY + 20);
+      ctx.lineTo(centerX - headR*0.7, shoulderY);
+      ctx.lineTo(centerX + headR*0.7, shoulderY);
+      ctx.lineTo(centerX + headR*1.1, shoulderY + 20);
+      ctx.quadraticCurveTo(centerX + shoulderW/2 - 30, shoulderY, centerX + shoulderW/2, H);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Dibujar cabeza
+      ctx.beginPath();
+      ctx.arc(centerX, headY, headR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Texto indicativo
+      ctx.fillStyle = labelColor;
+      ctx.font = `${W * 0.009}px 'Inter'`;
+      ctx.textAlign = 'center';
+      ctx.fillText("SILUETA DE TU CÁMARA (ZONA TUPIDA POR TI)", centerX, headY - headR - 20);
+      ctx.fillText("Coloca el logo y las mascotas a los lados para que sean visibles", centerX, headY - headR - 2);
+
+      ctx.restore();
+    }
+
+    function drawDeviceOutline(x, y, w, h, radius, strokeStyle, fillStyle) {
+      ctx.save();
+      ctx.strokeStyle = strokeStyle;
+      ctx.fillStyle = fillStyle;
+      ctx.lineWidth = 3;
+      ctx.setLineDash([]);
+
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + w - radius, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+      ctx.lineTo(x + w, y + h - radius);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+      ctx.lineTo(x + radius, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = strokeStyle;
+      ctx.beginPath();
+      const notchW = w * 0.25;
+      const notchH = h * 0.03;
+      const notchX = x + (w - notchW) / 2;
+      const notchY = y + h * 0.02;
+      ctx.arc(notchX + notchH/2, notchY + notchH/2, notchH/2, Math.PI/2, Math.PI * 1.5);
+      ctx.lineTo(notchX + notchW - notchH/2, notchY);
+      ctx.arc(notchX + notchW - notchH/2, notchY + notchH/2, notchH/2, Math.PI * 1.5, Math.PI/2);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // Descargar imagen
+    document.getElementById('btn-download').addEventListener('click', () => {
+      // 1. Dibujar sin guías
+      drawWallpaper(true);
+
+      // 2. Exportar
+      const link = document.createElement('a');
+      const resolution = document.getElementById('preset-resolution').value;
+      const mode = document.getElementById('wallpaper-mode').value;
+      link.download = `tetoca-${mode}-background-${resolution}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+      // 3. Restaurar guías
+      requestRedraw();
+    });
+
+    // Carga inicial al iniciar
+    setTimeout(requestRedraw, 300);
+  </script>
+</body>
+</html>
